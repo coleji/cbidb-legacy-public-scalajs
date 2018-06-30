@@ -52,9 +52,9 @@ object Main {
     println("hostname: " + Globals.window.location.hostname)
     println("protocol: " + Globals.window.location.protocol)
     println(API_LOCATION)
-    Router.render.set((view: VNode) => updateRootElement(div(id = "root", contents = view)))
+    Router.renderer.set((view: VNode) => updateRootElement(div(id = "root", contents = view)))
     Router.route(Globals.window.location.pathname).map(p => {
-      p.renderPage()
+      p.initialRender()
     })
     //UsersPage(render).renderPage()
     //AsyncPage(render).renderPage()
