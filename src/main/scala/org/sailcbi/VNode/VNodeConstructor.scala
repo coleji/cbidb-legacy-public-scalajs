@@ -2,19 +2,20 @@ package org.sailcbi.VNode
 
 import org.sailcbi.VNode.SnabbdomFacade.VNode
 import org.sailcbi.VNode.SnabbdomFacade.snabbdom.h
+import org.sailcbi.VNode.VNodeContents.NullAsContents
 
 import scala.scalajs.js
 
 sealed abstract class VNodeConstructor(tag: String) {
-  def apply[T](c: T)(implicit tc: VNodeContents[T]): VNode = apply(contents = c)
+  def apply[T](c: VNodeContents[T]): VNode = apply(contents = c)
   def apply[T](
+    contents: VNodeContents[T] = null,
     id: String = "",
     classes: List[String] = Nil,
     props: Map[String, String] = Map.empty,
     style: Map[String, String] = Map.empty,
-    events: Map[String, js.Any] = Map.empty,
-    contents: T = null
-  )(implicit tc: VNodeContents[T]): VNode = {
+    events: Map[String, js.Any] = Map.empty
+  ): VNode = {
     // E.g. tag#id.class1.class2.class3
     val firstArg = List(
       tag,
@@ -27,8 +28,10 @@ sealed abstract class VNodeConstructor(tag: String) {
       "style" -> VNodeConstructor.MapToJsDictionary(style),
       "on" -> VNodeConstructor.MapToJsDictionary(events)
     )
-
-    h(firstArg, unifiedProps, tc.asJs(contents))
+    contents match {
+      case null => h(firstArg, unifiedProps)
+      case _ => h(firstArg, unifiedProps, contents.asJs)
+    }
   }
 }
 
@@ -43,6 +46,7 @@ object VNodeConstructor {
 }
 
 case object a extends VNodeConstructor("a")
+case object b extends VNodeConstructor("b")
 case object br extends VNodeConstructor("br")
 case object button extends VNodeConstructor("button")
 case object div extends VNodeConstructor("div")
@@ -64,3 +68,4 @@ case object th extends VNodeConstructor("th")
 case object thead extends VNodeConstructor("thead")
 case object tr extends VNodeConstructor("tr")
 case object ul extends VNodeConstructor("ul")
+case object aPlaceholder extends VNodeConstructor("a")

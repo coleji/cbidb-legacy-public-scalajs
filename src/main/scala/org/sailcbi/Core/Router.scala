@@ -2,7 +2,7 @@ package org.sailcbi.Core
 
 import org.sailcbi.CbiUtil.Initializable
 import org.sailcbi.Core.Main.Globals
-import org.sailcbi.Pages.LoginPage.{LoginPageView}
+import org.sailcbi.Pages.LoginPage.LoginPageView
 import org.sailcbi.VNode.SnabbdomFacade.VNode
 
 import scala.concurrent.{Future, Promise}

@@ -4,14 +4,28 @@ import org.sailcbi.VNode.SnabbdomFacade.VNode
 
 import scala.scalajs.js
 
-trait VNodeContents[T] {
-  def asJs(t: T): js.Any = t.asInstanceOf[js.Any]
+abstract class VNodeContents[T](t: T) {
+  def asJs: js.Any = {
+    t.asInstanceOf[js.Any]
+  }
 }
 
 object VNodeContents {
-  implicit object StringAsContents extends VNodeContents[String]
-  implicit object IntAsContents extends VNodeContents[Int]
-  implicit object VNodeAsContents extends VNodeContents[VNode]
-  implicit object VNodeArrayAsContents extends VNodeContents[js.Array[VNode]]
-  implicit object NullAsContents extends VNodeContents[Null]
+  def apply(v: VNodeContents[_]*): VNodeContents[js.Array[VNodeContents[_]]] = {
+    import js.JSConverters._
+    v.toJSArray
+  }
+  implicit class StringAsContents(s: String) extends VNodeContents[String](s)
+  implicit class IntAsContents(i: Int) extends VNodeContents[Int](i)
+  implicit class VNodeAsContents(v: VNode) extends VNodeContents[VNode](v)
+  implicit class ContentsArrayAsContents(a: js.Array[VNodeContents[_]]) extends VNodeContents[js.Array[VNodeContents[_]]](a){
+    override def asJs: js.Any = {
+      try {
+        a.map(_.asJs)
+      } catch {
+        case _: Throwable => a.asInstanceOf[js.Any]
+      }
+    }
+  }
+  implicit object NullAsContents extends VNodeContents[Null](null)
 }
