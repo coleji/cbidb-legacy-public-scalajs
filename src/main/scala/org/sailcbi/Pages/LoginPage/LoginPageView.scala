@@ -1,16 +1,52 @@
 package org.sailcbi.Pages.LoginPage
 
+import fr.hmil.roshttp.body.URLEncodedBody
+import fr.hmil.roshttp.{HttpRequest, Method}
+import fr.hmil.roshttp.response.SimpleHttpResponse
 import org.sailcbi.CbiUtil.Currency
 import org.sailcbi.Components.{Button, Item, JoomlaArticleRegion}
+import org.sailcbi.Core.Router.renderer
+import org.sailcbi.Core.{Main, Message, View}
+import org.sailcbi.Pages.ForgotPWPage.ForgotPWPageView
+import org.sailcbi.Pages.HomePage.HomePageView
 import org.sailcbi.VNode.SnabbdomFacade.VNode
 import org.sailcbi.VNode.VNodeContents._
 import org.sailcbi.VNode._
 import org.sailcbi.ViewTemplates.JoomlaTwoColumns
 
+import scala.concurrent.Promise
 import scala.scalajs.js
+import scala.util.{Failure, Success}
 
 class LoginPageView (renderer: VNode => Unit) extends JoomlaTwoColumns[LoginPageModel](renderer) {
-  override val defaultModel: LoginPageModel = LoginPageModel(Currency.dollars(325), 2017)
+  val self = this
+  override val defaultModel: LoginPageModel = LoginPageModel(None, None, Currency.dollars(325), 2017)
+  def makeLoginFunction: (LoginPageModel) => () => Unit = (model: LoginPageModel) => () => {
+    import monix.execution.Scheduler.Implicits.global
+    val p = Promise[View[_]]
+    val body = URLEncodedBody(
+      "username" -> model.userName.getOrElse(""),
+      "password" -> model.password.getOrElse(""),
+      "redirect-url" -> (Main.BASE_LOCATION + "/login")
+    )
+    val request =
+      HttpRequest(Main.API_LOCATION + "/authenticate")
+        .withMethod(Method.POST)
+          .withBody(body)
+
+    request.send().onComplete({
+      case res:Success[SimpleHttpResponse] =>
+      case _: Failure[SimpleHttpResponse] =>
+    })
+  }
+  object ChangeUserName extends Message[LoginPageModel, String] {
+    def update: LoginPageModel => String => LoginPageModel =
+      model => payload => LoginPageModel(Some(payload), model.password, model.jpPrice, model.lastSeason)
+  }
+  object ChangePassword extends Message[LoginPageModel, String] {
+    def update: LoginPageModel => String => LoginPageModel =
+      model => payload => LoginPageModel(model.userName, Some(payload), model.jpPrice, model.lastSeason)
+  }
   def getLeft(model: LoginPageModel): VNodeContents[_] = {
     val welcomeRegion = {
       val text = VNodeContents(
@@ -44,6 +80,8 @@ class LoginPageView (renderer: VNode => Unit) extends JoomlaTwoColumns[LoginPage
     )
   }
   def getRight(model: LoginPageModel): VNodeContents[_] = {
+    val updateUserName: js.Function1[String, Unit] = ChangeUserName(self)(model)
+    val updatePassword: js.Function1[String, Unit] = ChangePassword(self)(model)
     val createAccount = {
       val contents = VNodeContents(
         ul(style=Map("font-size"->"0.92em", "margin-left"->"20px"), contents=li(aPlaceholder("Click here to create a parent account."))),
@@ -57,8 +95,20 @@ class LoginPageView (renderer: VNode => Unit) extends JoomlaTwoColumns[LoginPage
         "Enter your email address and password to continue.",
         br(),
         table(tbody(VNodeContents(
-          Item.Text.asTR("P101_USERNAME", "Email"),
-          Item.Password.asTR("P101_PASSWORD", "Password", extraCells = Some(td(contents=Button("Login")))),
+          Item.Text.asTR(
+            itemID = "P101_USERNAME",
+            itemLabel = "Email",
+            value = model.userName.getOrElse(""),
+            onChange = Some(updateUserName),
+            extraCells = None
+          ),
+          Item.Password.asTR(
+            itemID = "P101_PASSWORD",
+            itemLabel = "Password",
+            value = model.password.getOrElse(""),
+            onChange = Some(updatePassword),
+            extraCells = Some(td(contents=Button("Login", makeLoginFunction(model))))
+          ),
           tr(VNodeContents(
             td(),
             td(
