@@ -7,8 +7,8 @@ import org.sailcbi.VNode._
 import scala.scalajs.js
 
 abstract class JoomlaTwoColumns[T <: Model](renderer: VNode => Unit) extends View[T](renderer){
-  def getLeft(model: T): VNode
-  def getRight(model: T): VNode
+  def getLeft(model: T): VNodeContents[_]
+  def getRight(model: T): VNodeContents[_]
 
   //TODO: verify against apex
   def getVNode(model: T): VNode = {
@@ -23,9 +23,9 @@ abstract class JoomlaTwoColumns[T <: Model](renderer: VNode => Unit) extends Vie
                   table(style=Map("width"->"100%"), contents=
                     tbody(contents=
                       tr(contents=VNodeContents(
-                        td(style=Map("width"->"46%"), contents=getLeft(model)),
-                        td(style=Map("width"->"8%")),
-                        td(style=Map("width"->"46%"), contents=getRight(model))
+                        td(style=Map("width"->"46%", "vertical-align"->"top"), contents=getLeft(model)),
+                        td(style=Map("width"->"8%", "vertical-align"->"top")),
+                        td(style=Map("vertical-align"->"top"), contents=getRight(model))
                       ))
                     )
                   )
