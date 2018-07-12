@@ -1,14 +1,12 @@
 package org.sailcbi.Components.Item
 
 import org.sailcbi.Core.Main.Target
-import org.sailcbi.Core.Model
 import org.sailcbi.VNode.SnabbdomFacade.VNode
 import org.sailcbi.VNode._
-
-import scala.scalajs.js.JSConverters._
 import org.scalajs
 
 import scala.scalajs.js
+import scala.scalajs.js.JSConverters._
 
 trait Item {
   def asTR(itemID: String, itemLabel: String, value: String, onChange: Option[js.Function1[String, Unit]], extraCells: Option[VNodeContents[_]]): VNode

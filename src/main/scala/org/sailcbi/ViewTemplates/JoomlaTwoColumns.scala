@@ -4,8 +4,6 @@ import org.sailcbi.Core.{Model, View}
 import org.sailcbi.VNode.SnabbdomFacade.VNode
 import org.sailcbi.VNode._
 
-import scala.scalajs.js
-
 abstract class JoomlaTwoColumns[T <: Model](renderer: VNode => Unit) extends View[T](renderer){
   def getLeft(model: T): VNodeContents[_]
   def getRight(model: T): VNodeContents[_]

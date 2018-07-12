@@ -1,14 +1,11 @@
 package org.sailcbi.Pages.LoginPage
 
 import fr.hmil.roshttp.body.URLEncodedBody
-import fr.hmil.roshttp.{HttpRequest, Method}
 import fr.hmil.roshttp.response.SimpleHttpResponse
+import fr.hmil.roshttp.{HttpRequest, Method}
 import org.sailcbi.CbiUtil.Currency
 import org.sailcbi.Components.{Button, Item, JoomlaArticleRegion}
-import org.sailcbi.Core.Router.renderer
 import org.sailcbi.Core.{Main, Message, View}
-import org.sailcbi.Pages.ForgotPWPage.ForgotPWPageView
-import org.sailcbi.Pages.HomePage.HomePageView
 import org.sailcbi.VNode.SnabbdomFacade.VNode
 import org.sailcbi.VNode.VNodeContents._
 import org.sailcbi.VNode._

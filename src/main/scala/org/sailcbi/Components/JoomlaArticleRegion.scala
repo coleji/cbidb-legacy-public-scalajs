@@ -3,8 +3,6 @@ package org.sailcbi.Components
 import org.sailcbi.VNode.SnabbdomFacade.VNode
 import org.sailcbi.VNode._
 
-import scala.scalajs.js
-
 object JoomlaArticleRegion {
   def apply[T, U](id: String, title: VNodeContents[T], body: VNodeContents[U]): VNode =
     div(id=id, classes=List("rt-article"), contents=VNodeContents(

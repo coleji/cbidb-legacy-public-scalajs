@@ -4,8 +4,6 @@ import org.sailcbi.Core.{Model, View}
 import org.sailcbi.VNode.SnabbdomFacade.VNode
 import org.sailcbi.VNode.{VNodeContents, div}
 
-import scala.scalajs.js
-
 abstract class JoomlaMain[T <: Model](renderer: VNode => Unit) extends View[T](renderer){
   def getMain(model: T): VNode
 

@@ -2,7 +2,6 @@ package org.sailcbi.VNode
 
 import org.sailcbi.VNode.SnabbdomFacade.VNode
 import org.sailcbi.VNode.SnabbdomFacade.snabbdom.h
-import org.sailcbi.VNode.VNodeContents.NullAsContents
 
 import scala.scalajs.js
 

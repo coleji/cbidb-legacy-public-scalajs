@@ -1,7 +1,5 @@
 package org.sailcbi.Components.Item
 
-import org.sailcbi.Core.Model
-import org.sailcbi.VNode.SnabbdomFacade.VNode
 import org.sailcbi.VNode._
 
 import scala.scalajs.js

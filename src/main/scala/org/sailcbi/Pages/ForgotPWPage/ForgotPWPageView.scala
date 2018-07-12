@@ -1,6 +1,5 @@
 package org.sailcbi.Pages.ForgotPWPage
 
-import org.sailcbi.Pages.HomePage.HomePageModel
 import org.sailcbi.VNode.SnabbdomFacade.VNode
 import org.sailcbi.VNode.div
 import org.sailcbi.ViewTemplates.JoomlaMain
