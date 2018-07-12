@@ -7,6 +7,8 @@ import org.sailcbi.Core.Main.Globals
 import org.sailcbi.Pages.ForgotPWPage.ForgotPWPageView
 import org.sailcbi.Pages.HomePage.HomePageView
 import org.sailcbi.Pages.LoginPage.LoginPageView
+import org.sailcbi.Pages.Test1Page.Test1PageView
+import org.sailcbi.Pages.Test2Page.Test2PageView
 import org.sailcbi.VNode.SnabbdomFacade.VNode
 
 import scala.concurrent.{Future, Promise}
@@ -24,11 +26,17 @@ object Router {
       case res:Success[SimpleHttpResponse] => {
         val isLoggedIn: Boolean = res.get.body != "false"
         val pageAndLoginRequired: (View[_], Boolean) = {
+          println(path)
           path match {
             // login required:
             case "/home" => (new HomePageView(renderer.get), true)
             // login not required:
-            case "/forgot" => (new ForgotPWPageView(renderer.get), false)
+            case "/forgot" => {
+              println("matched forgot")
+              (new ForgotPWPageView(renderer.get), false)
+            }
+            case "/test1" => (new Test1PageView(renderer.get), false)
+            case "/test2" => (new Test2PageView(renderer.get), false)
             case "/login" => (new LoginPageView(renderer.get), false)
             case _ => (new LoginPageView(renderer.get), false)
           }

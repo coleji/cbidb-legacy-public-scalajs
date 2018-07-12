@@ -29,6 +29,7 @@ object Main {
         def hostname: String = js.native
         def protocol: String = js.native
       }
+      var onpopstate: js.Any = js.native
     }
     object history extends js.Object {
       def pushState(state: js.Object, title: String, path: String): Unit = js.native
@@ -51,14 +52,17 @@ object Main {
     println("host: " + Globals.window.location.host)
     println("hostname: " + Globals.window.location.hostname)
     println("protocol: " + Globals.window.location.protocol)
+    println("111222")
     println(API_LOCATION)
+    Globals.window.onpopstate = () => {
+      println("rendering after popstate")
+      Router.route(Globals.window.location.pathname).map(p => {
+        p.initialRender()
+      })
+    }
     Router.renderer.set((view: VNode) => updateRootElement(div(id = "root", contents = view)))
     Router.route(Globals.window.location.pathname).map(p => {
       p.initialRender()
     })
-    //UsersPage(render).renderPage()
-    //AsyncPage(render).renderPage()
-    //StringReversePage(render).renderPage()
-    //CounterPage(render).renderPage()
   }
 }
