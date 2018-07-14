@@ -17,7 +17,7 @@ import scala.util.{Failure, Success}
 
 object Router {
   val renderer = new Initializable[VNode => Unit]
-  // TODO: make better
+  val enforceLogin = false
   def route(path: String): Future[View[_]] = {
     import monix.execution.Scheduler.Implicits.global
     val p = Promise[View[_]]
@@ -29,12 +29,9 @@ object Router {
           println(path)
           path match {
             // login required:
-            case "/home" => (new HomePageView(renderer.get), true)
+            case "/home" => (new HomePageView(renderer.get), enforceLogin)
             // login not required:
-            case "/forgot" => {
-              println("matched forgot")
-              (new ForgotPWPageView(renderer.get), false)
-            }
+            case "/forgot" => (new ForgotPWPageView(renderer.get), false)
             case "/test1" => (new Test1PageView(renderer.get), false)
             case "/test2" => (new Test2PageView(renderer.get), false)
             case "/login" => (new LoginPageView(renderer.get), false)
